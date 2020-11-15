@@ -34,4 +34,29 @@ class DataStructuresTest extends FunSuite with Matchers {
     assert(caught.getMessage.equals("setHead on empty list"))
   }
 
+  test("exercise 3.4") {
+    drop(List(1, 2, 3), 3) shouldBe Nil
+
+    drop(List(1, 2, 3), 5) shouldBe Nil
+
+    drop(List(1, 2, 3), 1) shouldBe List(2, 3)
+  }
+
+  test("exercise 3.5") {
+    dropWhile(List(1, 3, 5), (x: Int) => (x % 2 != 0)) shouldBe Nil
+
+    dropWhile(List(1, 2, 3), (x: Int) => (x % 2 != 0)) shouldBe List(2, 3)
+
+    dropWhile(List(2, 4, 6), (x: Int) => (x % 2 != 0)) shouldBe List(2, 4, 6)
+  }
+
+  test("exercise 3.6") {
+    init(List(1, 2, 3)) shouldBe List(1, 2)
+
+    val caught = intercept[RuntimeException] {
+      init(Nil)
+    }
+    assert(caught.getMessage.equals("init of empty list"))
+  }
+
 }
