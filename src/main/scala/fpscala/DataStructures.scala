@@ -59,5 +59,14 @@ object DataStructures {
       case Cons(_, Nil) => Nil
       case Cons(head, tail) => Cons(head, init(tail))
     }
+
+
+  /**
+   * exercise 3.9
+   * Compute the length of a list using foldRight.
+   */
+  def length[A](as: List[A]): Int =
+    foldRight(as, 0)((_,acc) => acc + 1)
+
 }
 

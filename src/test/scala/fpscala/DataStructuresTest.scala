@@ -5,6 +5,7 @@ import fpscala.List._
 import DataStructures._
 
 
+
 class DataStructuresTest extends FunSuite with Matchers {
   test("exercise 3.1") {
     val x = List(1, 2, 3, 4, 5) match {
@@ -57,6 +58,12 @@ class DataStructuresTest extends FunSuite with Matchers {
       init(Nil)
     }
     assert(caught.getMessage.equals("init of empty list"))
+  }
+
+  test("exercise 3.9") {
+    DataStructures.length(List(1, 2, 3)) shouldBe 3
+
+    DataStructures.length(Nil) shouldBe 0
   }
 
 }
