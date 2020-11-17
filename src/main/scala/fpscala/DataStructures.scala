@@ -68,5 +68,29 @@ object DataStructures {
   def length[A](as: List[A]): Int =
     foldRight(as, 0)((_,acc) => acc + 1)
 
+
+  /**
+   * exercise 3.10
+   */
+  def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B =
+    as match {
+      case Nil => z
+      case Cons(head, tail) => foldLeft(tail, f(z, head))(f)
+    }
+
+
+  /**
+   * exercise 3.11
+   * Write sum, product, and a function to compute the length of a list using foldLeft
+   */
+  def sumL(ints: List[Int]): Int =
+    foldLeft(ints, 0)(_ + _)
+
+  def productL(ds: List[Double]): Double =
+    foldLeft(ds, 1.0)(_ * _)
+
+  def lengthL[A](as: List[A]): Int =
+    foldLeft(as, 0)((acc, h) => acc + 1)
+
 }
 

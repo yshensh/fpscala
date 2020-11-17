@@ -66,4 +66,10 @@ class DataStructuresTest extends FunSuite with Matchers {
     DataStructures.length(Nil) shouldBe 0
   }
 
+  test("exercise 3.10 and 3.11") {
+    sumL(List(1, 3, 5)) shouldBe 9
+    product(List(1, 3, 5)) shouldBe 15
+    lengthL(List(1, 2, 3)) shouldBe 3
+  }
+
 }
