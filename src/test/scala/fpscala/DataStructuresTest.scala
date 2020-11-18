@@ -60,6 +60,11 @@ class DataStructuresTest extends FunSuite with Matchers {
     assert(caught.getMessage.equals("init of empty list"))
   }
 
+  test("sumR implemented with foldRight") {
+    // trace the evaluation of foldRight used in sum
+    sumR(List(1, 3, 5)) shouldBe 1 + (3 + foldRight(Cons(5, Nil), 0)((x, y) => x + y))
+  }
+
   test("exercise 3.9") {
     DataStructures.length(List(1, 2, 3)) shouldBe 3
 

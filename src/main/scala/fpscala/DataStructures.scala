@@ -62,6 +62,18 @@ object DataStructures {
 
 
   /**
+   * foldRight and sum implemented in foldRight
+   */
+  def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B =
+    as match {
+      case Nil => z
+      case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    }
+
+  def sumR(ns: List[Int]) =
+    foldRight(ns, 0)((x, y) => x + y)
+
+  /**
    * exercise 3.9
    * Compute the length of a list using foldRight.
    */
