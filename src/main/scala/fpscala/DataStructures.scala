@@ -30,6 +30,7 @@ object DataStructures {
    * exercise 3.4
    * Generalize tail to the function drop, which removes the first n elements from a list.
    */
+  @scala.annotation.tailrec
   def drop[A](l: List[A], n: Int): List[A] =
     if (n <= 0) l
     else l match {
@@ -42,6 +43,7 @@ object DataStructures {
    * exercise 3.5
    * Implement dropWhile, which removes elements from the List prefix as long as they match a predicate.
    */
+  @scala.annotation.tailrec
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
     l match {
       case Cons(head, tail) if f(head) => dropWhile(tail, f)
@@ -70,7 +72,7 @@ object DataStructures {
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
     }
 
-  def sumR(ns: List[Int]) =
+  def sumR(ns: List[Int]): Int =
     foldRight(ns, 0)((x, y) => x + y)
 
   /**
@@ -84,6 +86,7 @@ object DataStructures {
   /**
    * exercise 3.10
    */
+  @scala.annotation.tailrec
   def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B =
     as match {
       case Nil => z
@@ -116,9 +119,43 @@ object DataStructures {
   /**
    * exercise 3.13
    * Write foldLeft in terms of foldRight and foldRight in terms of foldLeft
+   *
+   * - foldLeft in terms of foldRight
+   * Our foldLeft(List(1, 2, 3), z)(*) is ((z * 1) * 2) * 3
+   * Types here: List(1, 2, 3) is type List[A]
+   * z is of type B
+   * * is of type (B, A) -> B
+   *
+   * Result is of type B
+   *
+   * We want to express that in terms of foldRight
+   * As above:
+   * f0 = identity. f0(t) = t.
+   * f1 = g(3, f0). So f1(t) = f0(t * 3) = t * 3
+   * f2 = g(2, f1). So f2(t) = f1(t * 2) = (t * 2) * 3
+   * f3 = g(1, f2). So f3(t) = f2(t * 1) = ((t * 1) * 2) * 3
+   *
+   * And finally we apply f3 on z and get the expression we want.
+   * f3 = g(1, g(2, g(3, f0)))
+   * which means f3 = foldRight(as, f0)(g)
+   *
    */
   def foldLeftViaFoldRight[A,B](as: List[A], z: B)(f: (B, A) => B): B =
-    foldRight(as, (b: B) => b)((a, g) => b => g(f(b, a)))(z)
+  //    foldRight(as, (b: B) => b)((a, g) => b => g(f(b, a)))(z)
+  {
+    val f0 = (b: B) => b
+
+    /**
+     * first arg to g is of type A
+     * second arg to g is of the type of these s's, which is B => B
+     * So type of g is (A, (B=>B)) => (B=>B)
+     */
+    def g(a: A, s: B=>B): B=> B =
+      t => s(f(t, a))
+
+    foldRight(as, f0)(g)(z)
+  }
+
 
   def foldRightViaFoldLeft[A,B](as: List[A], z: B)(f: (A, B) => B): B =
     foldLeft(reverse(as), z)((b, a) => f(a, b))
