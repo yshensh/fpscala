@@ -72,4 +72,8 @@ class DataStructuresTest extends FunSuite with Matchers {
     lengthL(List(1, 2, 3)) shouldBe 3
   }
 
+  test("exercise 3.12") {
+    reverse(List(1, 3, 5)) shouldBe List(5, 3, 1)
+  }
+
 }

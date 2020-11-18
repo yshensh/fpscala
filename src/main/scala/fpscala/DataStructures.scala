@@ -75,7 +75,7 @@ object DataStructures {
   def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B =
     as match {
       case Nil => z
-      case Cons(head, tail) => foldLeft(tail, f(z, head))(f)
+      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
     }
 
 
@@ -91,6 +91,15 @@ object DataStructures {
 
   def lengthL[A](as: List[A]): Int =
     foldLeft(as, 0)((acc, h) => acc + 1)
+
+
+  /**
+   * exercise 3.12
+   * Write a function that returns the reverse of a list
+   */
+  def reverse[A](as: List[A]): List[A] =
+    foldLeft(as, List[A]())((acc, h) => Cons(h, acc))
+
 
 }
 
