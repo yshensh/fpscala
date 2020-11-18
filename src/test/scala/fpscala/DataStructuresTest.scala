@@ -82,4 +82,12 @@ class DataStructuresTest extends FunSuite with Matchers {
     reverse(List(1, 3, 5)) shouldBe Cons(5, Cons(3, Cons(1, List[Int]())))
   }
 
+  test("exercise 3.14") {
+    // trace the evaluation of foldRight used in append
+    appendViaFoldRight(List(1, 3), List(5, 7, 9)) shouldBe Cons(1, Cons(3, List(5, 7, 9)))
+
+    // trace the evaluation of foldLeft used in append
+    appendViaFoldLeft(List(1, 3), List(5, 7, 9)) shouldBe Cons(1, Cons(3, List(5, 7, 9)))
+  }
+
 }
