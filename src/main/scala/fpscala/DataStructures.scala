@@ -168,13 +168,15 @@ object DataStructures {
     foldRight(as, r)((h,acc) => Cons(h, acc))
 
   def appendViaFoldLeft[A](as: List[A], r: List[A]): List[A] =
-    foldLeft(reverse(as), r)((acc, h) => Cons(h, acc)
+    foldLeft(reverse(as), r)((acc, h) => Cons(h, acc))
 
   /**
    * exercise 3.15
    * Write a function that concatenates a list of lists into a single list.
    * Its runtime should be linear in the total length of all lists.
    */
-
+  def concat[A](as: List[List[A]]): List[A] =
+    foldRight(as, Nil: List[A])(appendViaFoldRight)
+//    foldRight(as, List[A]())((h, acc) => appendViaFoldRight(h, acc))
 }
 

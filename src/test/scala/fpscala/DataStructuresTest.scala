@@ -90,4 +90,10 @@ class DataStructuresTest extends FunSuite with Matchers {
     appendViaFoldLeft(List(1, 3), List(5, 7, 9)) shouldBe Cons(1, Cons(3, List(5, 7, 9)))
   }
 
+  test("exercise 3.15") {
+    // trace the evaluation of foldRight used in concat
+    concat(List(List(1, 3), List(5, 7, 9), List(11))) shouldBe appendViaFoldRight(List(1, 3), appendViaFoldRight(List(5, 7, 9), appendViaFoldRight(List(11), Nil)))
+
+  }
+
 }
