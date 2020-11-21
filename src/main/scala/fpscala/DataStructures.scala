@@ -4,7 +4,7 @@ import fpscala.List._
 
 object DataStructures {
   // 3.3 Data sharing in functional data structures
-  /***
+  /** *
    * exercise 3.2
    * Implement the function tail for removing the first element of a List
    */
@@ -15,7 +15,7 @@ object DataStructures {
     }
 
 
-  /***
+  /** *
    * exercise 3.3
    * Implement the function setHead for replacing the first element of a List with a different value
    */
@@ -35,7 +35,7 @@ object DataStructures {
     if (n <= 0) l
     else l match {
       case Nil => Nil
-      case Cons(_, tail) => drop(tail, n-1)
+      case Cons(_, tail) => drop(tail, n - 1)
     }
 
 
@@ -66,7 +66,7 @@ object DataStructures {
   /**
    * foldRight and sum implemented in foldRight
    */
-  def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B =
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B =
     as match {
       case Nil => z
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
@@ -80,14 +80,14 @@ object DataStructures {
    * Compute the length of a list using foldRight.
    */
   def length[A](as: List[A]): Int =
-    foldRight(as, 0)((_,acc) => acc + 1)
+    foldRight(as, 0)((_, acc) => acc + 1)
 
 
   /**
    * exercise 3.10
    */
   @scala.annotation.tailrec
-  def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B =
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B =
     as match {
       case Nil => z
       case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
@@ -140,7 +140,7 @@ object DataStructures {
    * which means f3 = foldRight(as, f0)(g)
    *
    */
-  def foldLeftViaFoldRight[A,B](as: List[A], z: B)(f: (B, A) => B): B =
+  def foldLeftViaFoldRight[A, B](as: List[A], z: B)(f: (B, A) => B): B =
   //    foldRight(as, (b: B) => b)((a, g) => b => g(f(b, a)))(z)
   {
     val f0 = (b: B) => b
@@ -150,14 +150,14 @@ object DataStructures {
      * second arg to g is of the type of these s's, which is B => B
      * So type of g is (A, (B=>B)) => (B=>B)
      */
-    def g(a: A, s: B=>B): B=> B =
+    def g(a: A, s: B => B): B => B =
       t => s(f(t, a))
 
     foldRight(as, f0)(g)(z)
   }
 
 
-  def foldRightViaFoldLeft[A,B](as: List[A], z: B)(f: (A, B) => B): B =
+  def foldRightViaFoldLeft[A, B](as: List[A], z: B)(f: (A, B) => B): B =
     foldLeft(reverse(as), z)((b, a) => f(a, b))
 
   /**
@@ -165,7 +165,7 @@ object DataStructures {
    * Implement append in terms of either foldLeft or foldRight.
    */
   def appendViaFoldRight[A](as: List[A], r: List[A]): List[A] =
-    foldRight(as, r)((h,acc) => Cons(h, acc))
+    foldRight(as, r)((h, acc) => Cons(h, acc))
 
   def appendViaFoldLeft[A](as: List[A], r: List[A]): List[A] =
     foldLeft(reverse(as), r)((acc, h) => Cons(h, acc))
@@ -177,6 +177,46 @@ object DataStructures {
    */
   def concat[A](as: List[List[A]]): List[A] =
     foldRight(as, Nil: List[A])(appendViaFoldRight)
-//    foldRight(as, List[A]())((h, acc) => appendViaFoldRight(h, acc))
-}
+    // foldRight(as, Nil: List[A])((a, acc) => appendViaFoldRight(a, acc))
+    // foldRight(as, List[A]())((h, acc) => appendViaFoldRight(h, acc))
 
+
+  /**
+   * exercise 3.16
+   * Write a function that transforms a list of integers by adding 1 to each element.
+   */
+  def addOne(ints: List[Int]): List[Int] =
+    foldRight(ints: List[Int], Nil: List[Int])((h, tail) => Cons(h + 1, tail))
+
+
+  /**
+   * exercise 3.17
+   * Write a function that turns each value in a List[Double] into a String.
+   */
+  def doubleToString(ds: List[Double]): List[String] =
+    foldRight(ds: List[Double], Nil: List[String])((d, tail) => Cons(d.toString, tail))
+
+
+  /**
+   * exercise 3.18
+   * Write a function map that generalizes modifying each element in a list while maintaining the structure of the list.
+   */
+  def map[A, B](as: List[A])(f: A => B): List[B] =
+    foldRight(as: List[A], Nil: List[B])((a, tail) => Cons(f(a), tail))
+
+
+  /**
+   * exercise 3.19
+   * Write a function filter that removes elements from a list unless they satisfy a given predicate.
+   */
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, Nil: List[A])((a, tail) => if (f(a)) Cons(a, tail) else tail)
+
+
+  /**
+   * exercise 3.20
+   * Write a function flatMap that works like map except that the function given will return a list instead of a single result, and that list should be inserted into the final resulting list.
+   */
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+    concat(map(as)(f))
+}

@@ -93,7 +93,15 @@ class DataStructuresTest extends FunSuite with Matchers {
   test("exercise 3.15") {
     // trace the evaluation of foldRight used in concat
     concat(List(List(1, 3), List(5, 7, 9), List(11))) shouldBe appendViaFoldRight(List(1, 3), appendViaFoldRight(List(5, 7, 9), appendViaFoldRight(List(11), Nil)))
+  }
 
+  test("exercise 3.16") {
+    // trace the evaluation of foldRight used in addOne
+    addOne(List(0, 1, 2)) shouldBe (Cons(0 + 1, Cons(1 + 1, Cons(2 + 1, Nil))))
+  }
+
+  test("exercise 3.17") {
+    doubleToString(List(0.1, 0.2 ,0.3)) shouldBe List("0.1", "0.2", "0.3")
   }
 
 }
