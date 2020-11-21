@@ -101,7 +101,19 @@ class DataStructuresTest extends FunSuite with Matchers {
   }
 
   test("exercise 3.17") {
-    doubleToString(List(0.1, 0.2 ,0.3)) shouldBe List("0.1", "0.2", "0.3")
+    doubleToString(List(0.1, 0.2 , 0.3)) shouldBe List("0.1", "0.2", "0.3")
+  }
+
+  test("exercise 3.20") {
+    flatMap(List(1, 2, 3))(i => List(i, i)) shouldBe List(1, 1, 2, 2, 3, 3)
+  }
+
+  test("exercise 3.22") {
+    addPairwise(List(1, 2, 3), List(5, 7, 9)) shouldBe List(6, 9, 12)
+  }
+
+  test("exercise 3.23") {
+    zipWith(List("A", "B", "C"), List("a", "b", "c"))(_ + _) shouldBe List("Aa", "Bb", "Cc")
   }
 
 }

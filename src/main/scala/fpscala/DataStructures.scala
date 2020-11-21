@@ -2,6 +2,8 @@ package fpscala
 
 import fpscala.List._
 
+import scala.annotation.tailrec
+
 object DataStructures {
   // 3.3 Data sharing in functional data structures
   /** *
@@ -219,4 +221,57 @@ object DataStructures {
    */
   def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
     concat(map(as)(f))
+
+
+  /**
+   * exercise 3.21
+   * Use flatMap to implement filter
+   */
+  def filterViaflatMap[A](as: List[A])(f: A => Boolean): List[A] =
+    flatMap(as)(a => if (f(a)) List(a) else Nil)
+
+
+  /**
+   * exercise 3.22
+   * Write a function that accepts two lists and constructs a new list by adding corresponding elements.
+   */
+  def addPairwise(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1+h2, addPairwise(t1, t2))
+  }
+
+
+  /**
+   * exercise 3.23
+   * Generalizied function zipWith
+   */
+  def zipWith[A,B,C](a: List[A], b: List[B])(f: (A,B) => C): List[C] = (a,b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+  }
+
+
+  /**
+   * exercise 3.24
+   * Implement hasSubsequence for checking whether a list contains another List as a subsequence.
+   * (xs append ys) startsWith xs
+   * xs startsWith Nil
+   * (xs append ys append zs) hasSubsequence ys
+   * xs hasSubsequence Nil
+   */
+  @tailrec
+  def startsWith[A](as: List[A], prefix: List[A]): Boolean = (as, prefix) match {
+    case (_, Nil) => true
+    case (Cons(h,t), Cons(h2,t2)) if h == h2 => startsWith(t, t2)
+    case _ => false
+  }
+  @tailrec
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = sup match {
+    case Nil => sub == Nil
+    case _ if startsWith(sup, sub) => true
+    case Cons(_, t) => hasSubsequence(t, sub)
+  }
+
 }
