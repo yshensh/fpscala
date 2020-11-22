@@ -2,8 +2,8 @@ package fpscala
 
 import org.scalatest.{FunSuite, Matchers}
 import fpscala.List._
+import fpscala.Tree._
 import DataStructures._
-
 
 
 class DataStructuresTest extends FunSuite with Matchers {
@@ -114,6 +114,42 @@ class DataStructuresTest extends FunSuite with Matchers {
 
   test("exercise 3.23") {
     zipWith(List("A", "B", "C"), List("a", "b", "c"))(_ + _) shouldBe List("Aa", "Bb", "Cc")
+  }
+
+  test("exercise 3.24") {
+    def l = List("a", "b", "c", "d", "e")
+    hasSubsequence(l, List("b", "c")) shouldBe true
+    hasSubsequence(l, List("a", "b")) shouldBe true
+    hasSubsequence(l, Nil) shouldBe true
+  }
+
+  test("exercise 3.25") {
+    def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+    DataStructures.size(t) shouldBe 5
+  }
+
+  test("exercise 3.26") {
+    def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+    DataStructures.maximum(t) shouldBe 3
+  }
+
+  test("exercise 3.27") {
+    def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+    DataStructures.depth(t) shouldBe 2
+  }
+
+  test("exercise 3.28") {
+    def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(5))
+    DataStructures.mapForTree(t)(_ % 2 ==0) shouldBe Branch(Branch(Leaf(false),Leaf(true)),Leaf(false))
+  }
+
+  test("exercise 3.29") {
+    def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+    sizeViaFold(t) shouldBe 5
+    maximumViaFold(t) shouldBe 3
+    depthViaFold(t) shouldBe 2
+    mapViaFold(t)(_ % 2 == 0) shouldBe Branch(Branch(Leaf(false),Leaf(true)),Leaf(false))
+
   }
 
 }

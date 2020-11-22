@@ -1,6 +1,7 @@
 package fpscala
 
 import fpscala.List._
+import fpscala.Tree._
 
 import scala.annotation.tailrec
 
@@ -332,6 +333,15 @@ object DataStructures {
       case Branch(left, right) => g(fold(left)(f)(g), fold(right)(f)(g))
     }
 
+  def sizeViaFold[A](t: Tree[A]): Int =
+    fold(t)(a => 1)(1 + _ + _)
 
+  def maximumViaFold(t: Tree[Int]): Int =
+    fold(t)(a => a)(_ max _)
 
+  def depthViaFold[A](t: Tree[A]): Int =
+    fold(t)(a => 0)((left, right) => 1 + (left max right))
+
+  def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
+    fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_,_))
 }
