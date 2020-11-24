@@ -1,0 +1,5 @@
+package fpscala
+
+object ErrorHandling {
+
+}

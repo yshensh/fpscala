@@ -14,7 +14,7 @@ class DataStructuresTest extends FunSuite with Matchers {
       case Cons(h, t) => h + sum(t) // match but not the first match x = 1 + 2 + 3 + 4 + 5
       case _ => 101 // otherwise x = 101
     }
-    x should be (3)
+    x shouldBe (3)
   }
 
   test("exercise 3.2") {
