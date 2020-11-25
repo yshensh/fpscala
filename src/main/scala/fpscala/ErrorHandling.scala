@@ -1,5 +1,6 @@
 package fpscala
 
-object ErrorHandling {
 
+object ErrorHandling {
+  // see fpscala.Option
 }

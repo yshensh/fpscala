@@ -1,6 +1,7 @@
 package fpscala
 
 import org.scalatest.{FunSuite, Matchers}
+import fpscala.Option._
 
 class ErrorHandlingTest extends FunSuite with Matchers{
   test("exercise 4.1") {
@@ -28,13 +29,13 @@ class ErrorHandlingTest extends FunSuite with Matchers{
     // Joe's department if he has one
     lookupByName("Joe").map(_.department).getOrElse("CEO") shouldBe "Accounting"
     // "Default dept." if not
-    print(lookupByName("Mike").map(_.department).getOrElse("Default dept."))
+    lookupByName("Mike").map(_.department).getOrElse("Default dept.")
 
-    // getOrElse
+    // orElse
     // Joe's department if he has one
     lookupByName("Joe").map(_.department).orElse(Some("Default dept.")) shouldBe Some("Accounting")
     // "Default dept." if not
-    print(lookupByName("Mike").map(_.department).orElse(Some("Default dept.")))
+    lookupByName("Mike").map(_.department).orElse(Some("Default dept."))
 
 
   }
