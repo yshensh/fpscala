@@ -74,9 +74,11 @@ object Option {
   /**
    * exercise 4.3
    * Write a generic function map2 that combines two Option values using a binary function.
-   * if we write a map (aa => b map (bb => f(aa, bb)))
-   * bb => f(aa, bb) return Option[C]
-   * a map (aa => ...) return Option[C]
+   * if we write
+   * a map (aa => b map (bb => f(aa, bb)))
+   *
+   * bb => f(aa, bb) returns Option[C]
+   * a map (aa => ...) returns Option[C]
    * the result becomes Option[Option[C]]
    *
    * change it to
