@@ -36,7 +36,5 @@ class ErrorHandlingTest extends FunSuite with Matchers{
     lookupByName("Joe").map(_.department).orElse(Some("Default dept.")) shouldBe Some("Accounting")
     // "Default dept." if not
     lookupByName("Mike").map(_.department).orElse(Some("Default dept."))
-
-
   }
 }

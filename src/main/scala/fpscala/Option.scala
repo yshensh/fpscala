@@ -74,6 +74,14 @@ object Option {
   /**
    * exercise 4.3
    * Write a generic function map2 that combines two Option values using a binary function.
+   * if we write a map (aa => b map (bb => f(aa, bb)))
+   * bb => f(aa, bb) return Option[C]
+   * a map (aa => ...) return Option[C]
+   * the result becomes Option[Option[C]]
+   *
+   * change it to
+   * a flatMap (aa => ...)
+   * this unpacks double Option into a simple Option[C]
    */
   def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
     a flatMap (aa => b map (bb => f(aa, bb)))
