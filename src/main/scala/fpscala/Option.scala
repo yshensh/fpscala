@@ -94,11 +94,10 @@ object Option {
     a flatMap (aa => b map (bb => f(aa, bb)))
 
 
-//  def sequence[A](a: ScalaList[Option[A]]): Option[ScalaList[A]] =
-//    a match {
-//      case ScalaNil => Some(ScalaNil)
-//      case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
-//    }
+  /**
+   * exercise 4.4
+   * Write a function sequence that combines a lit of Options into Option containing a list of all the Some values int he original list. If the original list contains None even once, the result of the function should be None; otherwise the result should be Some with a a list of all the values.
+   */
   def sequence[A](a: List[Option[A]]): Option[List[A]] =
   a match {
     case Nil => Some(Nil)
