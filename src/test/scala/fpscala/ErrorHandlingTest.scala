@@ -2,6 +2,7 @@ package fpscala
 
 import org.scalatest.{FunSuite, Matchers}
 import fpscala.Option._
+import scala.collection.immutable.{List => ScalaList}
 
 class ErrorHandlingTest extends FunSuite with Matchers{
   test("exercise 4.1") {
@@ -36,5 +37,13 @@ class ErrorHandlingTest extends FunSuite with Matchers{
     lookupByName("Joe").map(_.department).orElse(Some("Default dept.")) shouldBe Some("Accounting")
     // "Default dept." if not
     lookupByName("Mike").map(_.department).orElse(Some("Default dept."))
+  }
+
+  test("exercise 4.4") {
+    sequence(List(Some(1), Some(2), Some(3))) shouldBe Some(List(1, 2, 3))
+    sequence(List(Some(1), Some(2), None)) shouldBe None
+
+    sequence_1(ScalaList(Some(1), Some(2), Some(3))) shouldBe Some(ScalaList(1, 2, 3))
+    sequence_1(ScalaList(Some(1), Some(2), None)) shouldBe None
   }
 }

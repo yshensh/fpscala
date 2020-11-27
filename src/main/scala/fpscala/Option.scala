@@ -1,5 +1,10 @@
 package fpscala
 
+// imports all the members of the scala except for Option, Some, Either.
+import scala.{Option => _, Some => _, Either => _, _}
+import scala.collection.immutable.{List => ScalaList, Nil => ScalaNil}
+
+
 sealed trait Option[+A]
 {
   /**
@@ -87,4 +92,20 @@ object Option {
    */
   def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
     a flatMap (aa => b map (bb => f(aa, bb)))
+
+
+//  def sequence[A](a: ScalaList[Option[A]]): Option[ScalaList[A]] =
+//    a match {
+//      case ScalaNil => Some(ScalaNil)
+//      case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
+//    }
+  def sequence[A](a: List[Option[A]]): Option[List[A]] =
+  a match {
+    case Nil => Some(Nil)
+    case Cons(h, t) => h flatMap (hh => sequence(t) map (Cons(hh, _)))
+  }
+
+  def sequence_1[A](a: ScalaList[Option[A]]): Option[ScalaList[A]] =
+    a.foldRight[Option[ScalaList[A]]](Some(ScalaNil))((x,y) => map2(x,y)(_ :: _))
+
 }
