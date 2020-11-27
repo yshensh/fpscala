@@ -19,7 +19,7 @@ class ErrorHandlingTest extends FunSuite with Matchers{
     // map
     // Joe's dept. if Joe is an employee
     lookupByName("Joe").map(_.department) shouldBe Some("Accounting")
-    // None if Joe is not an employee
+    // None if John is not an employee
     lookupByName("John").map(_.department) shouldBe None
 
     // flatMap
@@ -50,9 +50,6 @@ class ErrorHandlingTest extends FunSuite with Matchers{
   }
 
   test("exercise 4.5") {
-    val list1 = List("1", "2", "3")
-    val list2 = List("1", "b", "3")
-
     def parseInt(a: String):  Option[Int] =
       Try(a.toInt) match {
         case Success(r) => Some(r)
@@ -67,5 +64,48 @@ class ErrorHandlingTest extends FunSuite with Matchers{
 
     sequenceViaTraverse(List(Some(1), Some(2), Some(3))) shouldBe Some(List(1, 2, 3))
     sequenceViaTraverse(List(Some(1), Some(2), None)) shouldBe None
+  }
+
+  test("exercise 4.6") {
+    case class Employee(name: String, department: String, manager: Either[String, Employee])
+
+    def lookupByName(name: String): Either[String, Employee] = name match {
+      case "Joe" => Right(Employee("Joe", "Accounting", Right(Employee("Mike", "CEO", Left("No manager")))))
+      case "Mary" => Right(Employee("Mary", "Accounting", Left("No manager")))
+      case "Peter" => Right(Employee("Peter", "Engineering", Left("No manager")))
+      case _ => Left("Employee not found")
+    }
+
+    // map
+    // Joe's dept. if Joe is an employee
+    lookupByName("Joe").map(_.department) shouldBe Right("Accounting")
+    // None if John is not an employee
+    lookupByName("John").map(_.department) shouldBe Left("Employee not found")
+
+    // flatMap
+    // Some(manager) if Joe has a manager
+    lookupByName("Joe").flatMap(_.manager) shouldBe Right(Employee("Mike", "CEO", Left("No manager")))
+    // None if Joe is not an employee or doesn't have a manager
+    lookupByName("Peter").flatMap(_.manager) shouldBe Left("No manager")
+
+    // orElse
+    // Joe's department if he has one
+    lookupByName("Joe").map(_.department).orElse(Left("Default dept.")) shouldBe Right("Accounting")
+    // "Default dept." if not
+    lookupByName("Mike").map(_.department).orElse(Left("Default dept.")) shouldBe Left("Default dept.")
+
+    // map2
+    def employeesShareDepartment(employeeA: Employee, employeeB: Employee) =
+      employeeA.department == employeeB.department
+
+    lookupByName("Joe").map2(lookupByName("Mary"))(
+      employeesShareDepartment) shouldBe Right(true)
+    lookupByName("Joe").map2(lookupByName("Mike"))(
+      employeesShareDepartment) shouldBe Left("Employee not found")
+
+    lookupByName("Joe").map2_1(lookupByName("Mary"))(
+      employeesShareDepartment) shouldBe Right(true)
+    lookupByName("Joe").map2_1(lookupByName("Mike"))(
+      employeesShareDepartment) shouldBe Left("Employee not found")
   }
 }
