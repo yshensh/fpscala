@@ -99,12 +99,28 @@ object Option {
    * Write a function sequence that combines a lit of Options into Option containing a list of all the Some values int he original list. If the original list contains None even once, the result of the function should be None; otherwise the result should be Some with a a list of all the values.
    */
   def sequence[A](a: List[Option[A]]): Option[List[A]] =
-  a match {
-    case Nil => Some(Nil)
-    case Cons(h, t) => h flatMap (hh => sequence(t) map (Cons(hh, _)))
+    a match {
+      case Nil => Some(Nil)
+      case Cons(h, t) => h flatMap (hh => sequence(t) map (Cons(hh, _)))
   }
 
   def sequence_1[A](a: ScalaList[Option[A]]): Option[ScalaList[A]] =
-    a.foldRight[Option[ScalaList[A]]](Some(ScalaNil))((x,y) => map2(x,y)(_ :: _))
+    a.foldRight[Option[ScalaList[A]]](Some(ScalaNil))((h,t) => map2(h,t)(_ :: _))
 
+
+  /**
+   * exercise 4.5
+   * Write a function traverse that map over a list using a function that might fail, returning None if applying it to-any element of the list returns None.
+   */
+  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
+    a match {
+      case Nil => Some(Nil)
+      case Cons(h, t) => map2(f(h), traverse(t)(f))(Cons(_,_))
+    }
+
+  def traverse_1[A, B](a: ScalaList[A])(f: A => Option[B]): Option[ScalaList[B]] =
+    a.foldRight[Option[ScalaList[B]]](Some(ScalaNil))((h,t) => map2(f(h),t)(_ :: _))
+
+  def sequenceViaTraverse[A](a: List[Option[A]]): Option[List[A]] =
+    traverse(a)(x => x)
 }

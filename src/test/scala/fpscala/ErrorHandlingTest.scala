@@ -2,7 +2,9 @@ package fpscala
 
 import org.scalatest.{FunSuite, Matchers}
 import fpscala.Option._
+
 import scala.collection.immutable.{List => ScalaList}
+import scala.util.{Success, Try}
 
 class ErrorHandlingTest extends FunSuite with Matchers{
   test("exercise 4.1") {
@@ -45,5 +47,25 @@ class ErrorHandlingTest extends FunSuite with Matchers{
 
     sequence_1(ScalaList(Some(1), Some(2), Some(3))) shouldBe Some(ScalaList(1, 2, 3))
     sequence_1(ScalaList(Some(1), Some(2), None)) shouldBe None
+  }
+
+  test("exercise 4.5") {
+    val list1 = List("1", "2", "3")
+    val list2 = List("1", "b", "3")
+
+    def parseInt(a: String):  Option[Int] =
+      Try(a.toInt) match {
+        case Success(r) => Some(r)
+        case _=> None
+      }
+
+    traverse(List("1", "2", "3"))(i => parseInt(i)) shouldBe Some(List(1, 2, 3))
+    traverse(List("1", "b", "3"))(i => parseInt(i)) shouldBe None
+
+    traverse_1(ScalaList("1", "2", "3"))(i => parseInt(i)) shouldBe Some(ScalaList(1, 2, 3))
+    traverse_1(ScalaList("1", "b", "3"))(i => parseInt(i)) shouldBe None
+
+    sequenceViaTraverse(List(Some(1), Some(2), Some(3))) shouldBe Some(List(1, 2, 3))
+    sequenceViaTraverse(List(Some(1), Some(2), None)) shouldBe None
   }
 }
