@@ -4,7 +4,7 @@ import org.scalatest.{FunSuite, Matchers}
 import fpscala.Option._
 
 import scala.collection.immutable.{List => ScalaList}
-import scala.util.{Success, Try}
+import scala.util.{Success => ScalaSuccess, Try}
 
 class ErrorHandlingTest extends FunSuite with Matchers{
   test("exercise 4.1") {
@@ -52,7 +52,7 @@ class ErrorHandlingTest extends FunSuite with Matchers{
   test("exercise 4.5") {
     def parseInt(a: String):  Option[Int] =
       Try(a.toInt) match {
-        case Success(r) => Some(r)
+        case ScalaSuccess(r) => Some(r)
         case _=> None
       }
 
@@ -118,7 +118,7 @@ class ErrorHandlingTest extends FunSuite with Matchers{
 
     def parseInt(a: String): Either[String, Int] =
       Try(a.toInt) match {
-        case Success(r) => Right(r)
+        case ScalaSuccess(r) => Right(r)
         case _=> Left("Error")
       }
 
@@ -130,5 +130,51 @@ class ErrorHandlingTest extends FunSuite with Matchers{
 
     Either.sequenceViaTraverse(List(Right(1), Right(2), Right(3))) shouldBe Right(List(1, 2, 3))
     Either.sequenceViaTraverse(List(Right(1), Right(2), Left("Error"))) shouldBe Left("Error")
+  }
+
+  test("exercise 4.8 with Either") {
+    case class Person(name: Name, age: Age)
+    sealed class Name(val value: String)
+    sealed class Age(val value: Int)
+
+    def mkName(name: String): Either[String, Name] =
+      if (name == "" || name == null) Left("Name is empty")
+      else Right(new Name(name))
+
+    def mkAge(age: Int): Either[String, Age] =
+      if (age < 0) Left("Age is out of range.")
+      else Right(new Age(age))
+
+    def mkPerson(name: String, age: Int): Either[String, Person] =
+      mkName(name).map2(mkAge(age))(Person(_,_))
+
+    // map2 is only able to report one error, even if both the name and the age are invalid.
+    mkPerson("", -1) shouldBe Left("Name is empty")
+    mkPerson(null, 1) shouldBe Left("Name is empty")
+    mkPerson("Joe", -1) shouldBe Left("Age is out of range.")
+    mkPerson("Joe", 1) equals Right(Person(new Name("Joe"), new Age(1)))
+  }
+
+  test("exercise 4.8 with Partial") {
+    case class Person(name: Name, age: Age)
+    sealed class Name(val value: String)
+    sealed class Age(val value: Int)
+
+    def mkName(name: String): Partial[String, Name] =
+      if (name == "" || name == null) Errors(Seq("Name is empty"))
+      else Success(new Name(name))
+
+    def mkAge(age: Int): Partial[String, Age] =
+      if (age < 0) Errors(Seq("Age is out of range."))
+      else Success(new Age(age))
+
+    def mkPerson(name: String, age: Int): Partial[String, Person] =
+      mkName(name).map2(mkAge(age))(Person(_,_))
+
+    // map2 is able to report both errors, even if both the name and the age are invalid.
+    mkPerson("", -1) shouldBe Errors(Seq("Name is empty", "Age is out of range."))
+    mkPerson(null, 1) shouldBe Errors(Seq("Name is empty"))
+    mkPerson("Joe", -1) shouldBe Errors(Seq("Age is out of range."))
+    mkPerson("Joe", 1) equals Success(Person(new Name("Joe"), new Age(1)))
   }
 }
