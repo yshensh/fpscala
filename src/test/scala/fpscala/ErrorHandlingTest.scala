@@ -108,4 +108,27 @@ class ErrorHandlingTest extends FunSuite with Matchers{
     lookupByName("Joe").map2_1(lookupByName("Mike"))(
       employeesShareDepartment) shouldBe Left("Employee not found")
   }
+
+  test("exercise 4.7") {
+    Either.sequence(List(Right(1), Right(2), Right(3))) shouldBe Right(List(1, 2, 3))
+    Either.sequence(List(Right(1), Right(2), Left("Error"))) shouldBe Left("Error")
+
+    Either.sequence_1(ScalaList(Right(1), Right(2), Right(3))) shouldBe Right(ScalaList(1, 2, 3))
+    Either.sequence_1(ScalaList(Right(1), Right(2), Left("Error"))) shouldBe Left("Error")
+
+    def parseInt(a: String): Either[String, Int] =
+      Try(a.toInt) match {
+        case Success(r) => Right(r)
+        case _=> Left("Error")
+      }
+
+    Either.traverse(List("1", "2", "3"))(i => parseInt(i)) shouldBe Right(List(1, 2, 3))
+    Either.traverse(List("1", "b", "3"))(i => parseInt(i)) shouldBe Left("Error")
+
+    Either.traverse_1(ScalaList("1", "2", "3"))(i => parseInt(i)) shouldBe Right(ScalaList(1, 2, 3))
+    Either.traverse_1(ScalaList("1", "b", "3"))(i => parseInt(i)) shouldBe Left("Error")
+
+    Either.sequenceViaTraverse(List(Right(1), Right(2), Right(3))) shouldBe Right(List(1, 2, 3))
+    Either.sequenceViaTraverse(List(Right(1), Right(2), Left("Error"))) shouldBe Left("Error")
+  }
 }
