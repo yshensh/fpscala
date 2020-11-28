@@ -171,7 +171,7 @@ class ErrorHandlingTest extends FunSuite with Matchers{
     def mkPerson(name: String, age: Int): Partial[String, Person] =
       mkName(name).map2(mkAge(age))(Person(_,_))
 
-    // map2 is able to report both errors, even if both the name and the age are invalid.
+    // map2 is able to report both errors, when both the name and the age are invalid.
     mkPerson("", -1) shouldBe Errors(Seq("Name is empty", "Age is out of range."))
     mkPerson(null, 1) shouldBe Errors(Seq("Name is empty"))
     mkPerson("Joe", -1) shouldBe Errors(Seq("Age is out of range."))
