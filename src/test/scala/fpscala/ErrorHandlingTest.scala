@@ -1,10 +1,12 @@
 package fpscala
 
 import org.scalatest.{FunSuite, Matchers}
-import fpscala.Option._
+import fpscala.errorhandling.Option._
+import fpscala.errorhandling.{Some, None, Option, Right, Left, Either, Errors, Success, Partial}
 
+import fpscala.datastructures.List
 import scala.collection.immutable.{List => ScalaList}
-import scala.util.{Success => ScalaSuccess, Try}
+import scala.util.{Try, Success => ScalaSuccess}
 
 class ErrorHandlingTest extends FunSuite with Matchers{
   test("exercise 4.1") {

@@ -1,8 +1,11 @@
-package fpscala
+package fpscala.errorhandling
 
 // imports all the members of the scala except for Option, Some, Either.
-import scala.{Option => _, Some => _, Either => _, _}
+import fpscala.datastructures.Cons
+import fpscala.datastructures
+
 import scala.collection.immutable.{List => ScalaList, Nil => ScalaNil}
+import scala.{Either => _, Option => _, Some => _}
 
 
 sealed trait Option[+A]
@@ -98,10 +101,10 @@ object Option {
    * exercise 4.4
    * Write a function sequence that combines a lit of Options into Option containing a list of all the Some values int he original list. If the original list contains None even once, the result of the function should be None; otherwise the result should be Some with a a list of all the values.
    */
-  def sequence[A](a: List[Option[A]]): Option[List[A]] =
+  def sequence[A](a: datastructures.List[Option[A]]): Option[datastructures.List[A]] =
     a match {
-      case Nil => Some(Nil)
-      case Cons(h, t) => h flatMap (hh => sequence(t) map (Cons(hh, _)))
+      case datastructures.Nil => Some(datastructures.Nil)
+      case datastructures.Cons(h, t) => h flatMap (hh => sequence(t) map (Cons(hh, _)))
   }
 
   def sequence_1[A](a: ScalaList[Option[A]]): Option[ScalaList[A]] =
@@ -112,15 +115,15 @@ object Option {
    * exercise 4.5
    * Write a function traverse that map over a list using a function that might fail, returning None if applying it to-any element of the list returns None.
    */
-  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
+  def traverse[A, B](a: datastructures.List[A])(f: A => Option[B]): Option[datastructures.List[B]] =
     a match {
-      case Nil => Some(Nil)
-      case Cons(h, t) => map2(f(h), traverse(t)(f))(Cons(_,_))
+      case datastructures.Nil => Some(datastructures.Nil)
+      case datastructures.Cons(h, t) => map2(f(h), traverse(t)(f))(Cons(_,_))
     }
 
   def traverse_1[A, B](a: ScalaList[A])(f: A => Option[B]): Option[ScalaList[B]] =
     a.foldRight[Option[ScalaList[B]]](Some(ScalaNil))((h,t) => map2(f(h),t)(_ :: _))
 
-  def sequenceViaTraverse[A](a: List[Option[A]]): Option[List[A]] =
+  def sequenceViaTraverse[A](a: datastructures.List[Option[A]]): Option[datastructures.List[A]] =
     traverse(a)(x => x)
 }

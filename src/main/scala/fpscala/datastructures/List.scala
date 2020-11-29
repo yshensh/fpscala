@@ -1,12 +1,28 @@
-package fpscala
-
-import fpscala.List._
-import fpscala.Tree._
+package fpscala.datastructures
 
 import scala.annotation.tailrec
 
-object DataStructures {
-  // 3.3 Data sharing in functional data structures
+
+sealed trait List[+A]
+case object Nil extends List[Nothing]
+case class Cons[+A](head: A, tail: List[A]) extends List[A]
+
+object List {
+  def sum(ints: List[Int]): Int = ints match {
+    case Nil => 0
+    case Cons(x, xs) => x + sum(xs)
+  }
+
+  def product(ds: List[Double]): Double = ds match {
+    case Nil => 1.0
+    case Cons(0.0, _) => 0.0
+    case Cons(x, xs) => x * product(xs)
+  }
+
+  def apply[A](as: A*): List[A] =
+    if (as.isEmpty) Nil
+    else Cons(as.head, apply(as.tail: _*))
+
   /** *
    * exercise 3.2
    * Implement the function tail for removing the first element of a List
@@ -180,8 +196,8 @@ object DataStructures {
    */
   def concat[A](as: List[List[A]]): List[A] =
     foldRight(as, Nil: List[A])(appendViaFoldRight)
-    // foldRight(as, Nil: List[A])((a, acc) => appendViaFoldRight(a, acc))
-    // foldRight(as, List[A]())((h, acc) => appendViaFoldRight(h, acc))
+  // foldRight(as, Nil: List[A])((a, acc) => appendViaFoldRight(a, acc))
+  // foldRight(as, List[A]())((h, acc) => appendViaFoldRight(h, acc))
 
 
   /**
@@ -274,74 +290,4 @@ object DataStructures {
     case _ if startsWith(sup, sub) => true
     case Cons(_, t) => hasSubsequence(t, sub)
   }
-
-
-  /**
-   * exercise 3.25
-   * Write a function size that counts the number of nodes (leaves and branches) in a tree.
-   */
-  def size[A](t: Tree[A]): Int =
-    t match {
-      case Leaf(_) => 1
-      case Branch(left, right) => 1 + size(left) + size(right)
-    }
-
-
-  /**
-   * exercise 3.26
-   * Write a function maximum that returns the maximum element in a Tree[Int].
-   */
-  def maximum(t: Tree[Int]): Int =
-    t match {
-      case Leaf(node) => node
-      case Branch(left, right) => maximum(left) max maximum(right)
-    }
-
-
-  /**
-   * exercise 3.27
-   * Write a function depth that returns the maximum path length from the root of a tree to any leaf.
-   */
-  def depth[A](t: Tree[A]): Int =
-    t match {
-      case Leaf(_) => 0
-      case Branch(left, right) => 1+ depth(left) max depth(right)
-    }
-
-
-  /**
-   * exercise 3.28
-   * Write a function map, analogous to the method of the same name on List, that modifies each element in a tree with a given function.
-   */
-  def mapForTree[A, B](t: Tree[A])(f: A => B): Tree[B] =
-    t match {
-      case Leaf(node) => Leaf(f(node))
-      case Branch(left, right) => Branch(mapForTree(left)(f), mapForTree(right)(f))
-    }
-
-
-  /**
-   * exercise 3.29
-   * Generalize size, maximum, depth, and map, writing a new function fold that abstracts over their similarities.
-   * Reimplement them in terms of this more general function.
-   * Like `foldRight` for lists, `fold` receives a "handler" for each of the data constructors of the type,
-   * and recursively accumulates some value using these handlers.
-   */
-  def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B =
-    t match {
-      case Leaf(node) => f(node)
-      case Branch(left, right) => g(fold(left)(f)(g), fold(right)(f)(g))
-    }
-
-  def sizeViaFold[A](t: Tree[A]): Int =
-    fold(t)(a => 1)(1 + _ + _)
-
-  def maximumViaFold(t: Tree[Int]): Int =
-    fold(t)(a => a)(_ max _)
-
-  def depthViaFold[A](t: Tree[A]): Int =
-    fold(t)(a => 0)((left, right) => 1 + (left max right))
-
-  def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
-    fold(t)(a => Leaf(f(a)): Tree[B])(Branch(_,_))
 }

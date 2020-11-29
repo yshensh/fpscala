@@ -1,4 +1,4 @@
-package fpscala
+package fpscala.errorhandling
 
 trait Partial[+A,+B] {
   // The given function is applied if this is Partial

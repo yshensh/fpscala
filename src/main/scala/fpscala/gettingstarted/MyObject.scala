@@ -1,9 +1,8 @@
-package fpscala
+package fpscala.gettingstarted
 
 import scala.annotation.tailrec
 
-
-object Gettingstarted {
+object MyObject {
   /***
    * exercise 2.1
    */
@@ -48,5 +47,4 @@ object Gettingstarted {
    */
   def composee[A, B, C](f: B => C, g: A => B): A => C =
     a => f(g(a))
-
 }

@@ -1,7 +1,10 @@
-package fpscala
+package fpscala.errorhandling
 
-import scala.{Option => _, Some => _, Either => _, _}
+import fpscala.datastructures.Cons
+import fpscala.datastructures
+
 import scala.collection.immutable.{List => ScalaList, Nil => ScalaNil}
+import scala.{Either => _, Option => _, Some => _}
 
 sealed trait Either[+E, +A] {
   /**
@@ -57,24 +60,24 @@ object Either {
    * Exercise 4.7
    * Implement sequence and traverse for Either.
    */
-  def sequence[E,A](es: List[Either[E, A]]): Either[E, List[A]] =
+  def sequence[E,A](es: datastructures.List[Either[E, A]]): Either[E, datastructures.List[A]] =
     es match {
-      case Nil => Right(Nil)
-      case Cons(h, t) => h flatMap(hh => sequence(t) map (Cons(hh, _)))
+      case datastructures.Nil => Right(datastructures.Nil)
+      case datastructures.Cons(h, t) => h flatMap(hh => sequence(t) map (Cons(hh, _)))
     }
 
   def sequence_1[E,A](es: ScalaList[Either[E, A]]): Either[E, ScalaList[A]] =
     es.foldRight[Either[E, ScalaList[A]]](Right(ScalaNil))((h,t) => h.map2(t)(_ :: _))
 
-  def traverse[E,A,B](as: List[A])(f: A => Either[E,B]): Either[E, List[B]] =
+  def traverse[E,A,B](as: datastructures.List[A])(f: A => Either[E,B]): Either[E, datastructures.List[B]] =
     as match {
-      case Nil => Right(Nil)
-      case Cons(h, t) => (f(h) map2 traverse(t)(f))(Cons(_, _))
+      case datastructures.Nil => Right(datastructures.Nil)
+      case datastructures.Cons(h, t) => (f(h) map2 traverse(t)(f))(Cons(_, _))
     }
 
   def traverse_1[E,A,B](as: ScalaList[A])(f: A => Either[E,B]): Either[E, ScalaList[B]] =
     as.foldRight[Either[E, ScalaList[B]]](Right(ScalaNil))((h,t) => f(h).map2(t)(_ :: _))
 
-  def sequenceViaTraverse[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
+  def sequenceViaTraverse[E, A](es: datastructures.List[Either[E, A]]): Either[E, datastructures.List[A]] =
     traverse(es)(x => x)
 }

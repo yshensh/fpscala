@@ -1,9 +1,9 @@
 package fpscala
 
 import org.scalatest.{FunSuite, Matchers}
-import fpscala.List._
-import fpscala.Tree._
-import DataStructures._
+import fpscala.datastructures.List._
+import fpscala.datastructures.Tree._
+import fpscala.datastructures.{Cons, Nil, List, Leaf, Branch, Tree}
 
 
 class DataStructuresTest extends FunSuite with Matchers {
@@ -19,7 +19,6 @@ class DataStructuresTest extends FunSuite with Matchers {
 
   test("exercise 3.2") {
     tail(List(1, 2, 3)) shouldBe List(2, 3)
-
     val caught = intercept[RuntimeException] {
       tail(Nil)
     }
@@ -28,7 +27,6 @@ class DataStructuresTest extends FunSuite with Matchers {
 
   test("exercise 3.3") {
     setHead(List(1, 2, 3), 0) shouldBe List(0, 2, 3)
-
     val caught = intercept[RuntimeException] {
       setHead(Nil, 0)
     }
@@ -37,23 +35,18 @@ class DataStructuresTest extends FunSuite with Matchers {
 
   test("exercise 3.4") {
     drop(List(1, 2, 3), 3) shouldBe Nil
-
     drop(List(1, 2, 3), 5) shouldBe Nil
-
     drop(List(1, 2, 3), 1) shouldBe List(2, 3)
   }
 
   test("exercise 3.5") {
     dropWhile(List(1, 3, 5), (x: Int) => (x % 2 != 0)) shouldBe Nil
-
     dropWhile(List(1, 2, 3), (x: Int) => (x % 2 != 0)) shouldBe List(2, 3)
-
     dropWhile(List(2, 4, 6), (x: Int) => (x % 2 != 0)) shouldBe List(2, 4, 6)
   }
 
   test("exercise 3.6") {
     init(List(1, 2, 3)) shouldBe List(1, 2)
-
     val caught = intercept[RuntimeException] {
       init(Nil)
     }
@@ -66,9 +59,8 @@ class DataStructuresTest extends FunSuite with Matchers {
   }
 
   test("exercise 3.9") {
-    DataStructures.length(List(1, 2, 3)) shouldBe 3
-
-    DataStructures.length(Nil) shouldBe 0
+    List.length(List(1, 2, 3)) shouldBe 3
+    List.length(Nil) shouldBe 0
   }
 
   test("exercise 3.10 and 3.11") {
@@ -85,7 +77,6 @@ class DataStructuresTest extends FunSuite with Matchers {
   test("exercise 3.14") {
     // trace the evaluation of foldRight used in append
     appendViaFoldRight(List(1, 3), List(5, 7, 9)) shouldBe Cons(1, Cons(3, List(5, 7, 9)))
-
     // trace the evaluation of foldLeft used in append
     appendViaFoldLeft(List(1, 3), List(5, 7, 9)) shouldBe Cons(1, Cons(3, List(5, 7, 9)))
   }
@@ -125,22 +116,22 @@ class DataStructuresTest extends FunSuite with Matchers {
 
   test("exercise 3.25") {
     def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
-    DataStructures.size(t) shouldBe 5
+    Tree.size(t) shouldBe 5
   }
 
   test("exercise 3.26") {
     def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
-    DataStructures.maximum(t) shouldBe 3
+    maximum(t) shouldBe 3
   }
 
   test("exercise 3.27") {
     def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
-    DataStructures.depth(t) shouldBe 2
+    depth(t) shouldBe 2
   }
 
   test("exercise 3.28") {
     def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(5))
-    DataStructures.mapForTree(t)(_ % 2 ==0) shouldBe Branch(Branch(Leaf(false),Leaf(true)),Leaf(false))
+    mapForTree(t)(_ % 2 ==0) shouldBe Branch(Branch(Leaf(false),Leaf(true)),Leaf(false))
   }
 
   test("exercise 3.29") {
@@ -149,7 +140,5 @@ class DataStructuresTest extends FunSuite with Matchers {
     maximumViaFold(t) shouldBe 3
     depthViaFold(t) shouldBe 2
     mapViaFold(t)(_ % 2 == 0) shouldBe Branch(Branch(Leaf(false),Leaf(true)),Leaf(false))
-
   }
-
 }
