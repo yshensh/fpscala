@@ -43,4 +43,13 @@ class Laziness extends FunSuite with Matchers {
     Stream(2, 1, 3).headOption shouldBe Some(2)
     Stream().headOption shouldBe None
   }
+
+  test("exercise 5.7") {
+    /**
+     * "first-class loop"
+     * the computation alternates between generating a single element of the output of map, and testing with filter to see if that element is divisible by 2 (adding it to the output list if it is).
+     * Here we don't fully instantiate teh intermediate stram that results from the map.
+     */
+    Stream(1, 2, 3, 4).map(_ + 10).filter(_ % 2 == 0).toList shouldBe List(12, 14)
+  }
 }

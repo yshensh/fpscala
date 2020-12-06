@@ -43,6 +43,9 @@ sealed trait Stream[+A] {
     }
 
   /**
+   * Applies a binary operator to all elements of this sequence and a start value, going right to left.
+   *
+   * f takes two arguments: 1) A and 2) => B
    * The arrow => in front of the argument type B means that the function f takes its second argument
    * by name and may choose not to evaluate it.
    */
@@ -81,8 +84,29 @@ sealed trait Stream[+A] {
    * Exercise 5.7
    * Implement map, filter, append, and flatMap using foldRight.
    */
+  // Returns the stream resulting from applying the given function f to each element of this stream.
+  def map[B](f: A => B): Stream[B] =
+    foldRight(empty[B])((h,t) => cons(f(h), t))
 
+  // Selects all elements of this traversable collection which satisfy a predicate.
+  def filter(p: A => Boolean): Stream[A] =
+    foldRight(empty[A])(
+      (h,t) =>
+        if(p(h)) cons(h, t)
+        else t
+    )
 
+  // The stream resulting from the concatenation of this stream with the argument stream.
+  // B>:A is a lower type bound, which means that B is constrained to be supertype of A
+  // B<:A is an upper type bound, which means that B is constrained to be subtype of A
+  def append[B>:A](rest: => Stream[B]): Stream[B] =
+    foldRight(rest)(
+      (h,t) => cons(h, t)
+    )
+
+  // Applies the given function f to each element of this stream, then concatenates the results.
+  def flatMap[B](f: A => Stream[B]): Stream[B] =
+    foldRight(empty[B])((h,t) => f(h) append t)
 
 }
 case object Empty extends Stream[Nothing]
