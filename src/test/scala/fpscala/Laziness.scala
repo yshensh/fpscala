@@ -1,6 +1,7 @@
 package fpscala
 
 import fpscala.laziness.{Cons, Stream}
+import fpscala.laziness.Stream.{constant, from, fibs}
 
 import scala.collection.immutable.List
 import org.scalatest.{FunSuite, Matchers}
@@ -51,5 +52,17 @@ class Laziness extends FunSuite with Matchers {
      * Here we don't fully instantiate teh intermediate stram that results from the map.
      */
     Stream(1, 2, 3, 4).map(_ + 10).filter(_ % 2 == 0).toList shouldBe List(12, 14)
+  }
+
+  test("exercise 5.8") {
+    constant(1).take(5).toList shouldBe List(1, 1, 1, 1, 1)
+  }
+
+  test("exercise 5.9") {
+    from(1).take(5).toList shouldBe List(1, 2, 3, 4, 5)
+  }
+
+  test("exercise 5.10") {
+    fibs.take(7).toList shouldBe List(0, 1, 1, 2, 3, 5, 8)
   }
 }

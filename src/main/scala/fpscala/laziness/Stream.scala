@@ -108,6 +108,43 @@ sealed trait Stream[+A] {
   def flatMap[B](f: A => Stream[B]): Stream[B] =
     foldRight(empty[B])((h,t) => f(h) append t)
 
+  /**
+   * Exercise 5.11
+   * Write a more general stream-building function called unfold.
+   * It takes an initial state, and a function for producing both the next state and the the next value in the generated stream.
+   */
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = ???
+
+  /**
+   * Exercise 5.12
+   * Write fibs, from, constant, and ones in terms of unfold.
+   */
+
+  /**
+   * Exercise 5.13
+   * Use unfold to implement map, take, takeWhile, zipWith, and zipAll.
+   */
+
+  /**
+   * Exercise 5.14
+   * Implement startsWith.
+   */
+  def startsWith[A](s: Stream[A]): Boolean = ???
+
+  /**
+   * Exercise 5.15
+   * Implement tails using unfold.
+   * For a given Stream, tails returns the Stream of suffixes of the input sequence, starting with the original Stream.
+   */
+  def tails: Stream[Stream[A]] = ???
+
+  def hasSubsequence[A](s: Stream[A]): Boolean = ???
+//    tails exists (_ startsWith s)
+
+  /**
+   * Exercise 5.16
+   * Generalize tails to the function scanRight, which is like a foldRight that returns a stream of the intermediate results.
+   */
 }
 case object Empty extends Stream[Nothing]
 // A nonempty stream consists of a head and a tail, which are both non-strict.
@@ -128,4 +165,31 @@ object Stream {
   // A convenient variable-argument method for constructing a Stream from multiple elements.
   def apply[A](as: A*): Stream[A] =
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
+
+  /**
+   * Exercise 5.8
+   * Generalize ones slightly to the function constant, which returns an infinite Stream of a given value.
+   */
+  def constant[A](a: A): Stream[A] = {
+    lazy val tail: Stream[A] = Cons(() => a, () => tail)
+    tail
+  }
+
+  /**
+   * Exercise 5.9
+   * Write a function that generates an infinite stream of integers, starting from n, then n + 1, n + 2, and so on.
+   */
+  def from(n: Int): Stream[Int] =
+    cons(n, from(n + 1))
+
+  /**
+   * Exercise 5.10
+   * Write a function fibs that generates the infinite stream of Fibonacci numbers:0, 1, 1, 2, 3, 5, 8, and so on.
+   */
+  def fibs = {
+    def go(f0: Int, f1: Int): Stream[Int] =
+      cons(f0, go(f1, f0+f1))
+    go(0, 1)
+  }
+
 }
