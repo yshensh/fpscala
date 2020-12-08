@@ -160,7 +160,7 @@ sealed trait Stream[+A] {
    * Implement startsWith.
    */
   def startsWith[A](s: Stream[A]): Boolean =
-    zipAll(s).takeWhile(_._2.isEmpty) forAll {
+    zipAll(s).takeWhile(_._2.isDefined) forAll {
       case (h, h2) => h == h2
     }
 

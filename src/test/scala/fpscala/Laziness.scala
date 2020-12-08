@@ -73,6 +73,17 @@ class Laziness extends FunSuite with Matchers {
     onesViaUnfold.take(5).toList shouldBe List(1, 1, 1, 1, 1)
   }
 
+  test("exercise 5.13") {
+    Stream("a", "b", "c").zip(onesViaUnfold).toList shouldBe List(("a",1), ("b",1), ("c",1))
+    Stream("a", "b", "c").zipAll(onesViaUnfold).take(5).toList shouldBe List((Some("a"),Some(1)), (Some("b"),Some(1)), (Some("c"),Some(1)), (None, Some(1)), (None, Some(1)))
+  }
+
+  test("exercise 5.14") {
+    Stream(1, 2, 3).startsWith(Stream(1, 2)) shouldBe true
+    Stream(0, 1, 2, 3).startsWith(Stream(5, 6)) shouldBe false
+    Stream(0, 1, 2, 3).startsWith(Stream(1, 2)) shouldBe false
+  }
+
   test("exercise 5.15") {
     // Iterates over the tails of this imutable sequence
     Stream(1, 2, 3).tails.toList.map(_.toList) shouldBe List(List(1, 2, 3), List(2, 3), List(3), List())
