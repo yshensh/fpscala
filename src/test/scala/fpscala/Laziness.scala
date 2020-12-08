@@ -1,7 +1,7 @@
 package fpscala
 
-import fpscala.laziness.{Cons, Stream}
-import fpscala.laziness.Stream.{constant, from, fibs}
+import fpscala.laziness.Stream
+import fpscala.laziness.Stream._
 
 import scala.collection.immutable.List
 import org.scalatest.{FunSuite, Matchers}
@@ -64,5 +64,21 @@ class Laziness extends FunSuite with Matchers {
 
   test("exercise 5.10") {
     fibs.take(7).toList shouldBe List(0, 1, 1, 2, 3, 5, 8)
+  }
+
+  test("exercise 5.12") {
+    fibsViaUnfold.take(7).toList shouldBe List(0, 1, 1, 2, 3, 5, 8)
+    fromViaUnfold(1).take(5).toList shouldBe List(1, 2, 3, 4, 5)
+    constantViaUnfold(5).take(3).toList shouldBe List(5, 5, 5)
+    onesViaUnfold.take(5).toList shouldBe List(1, 1, 1, 1, 1)
+  }
+
+  test("exercise 5.15") {
+    // Iterates over the tails of this imutable sequence
+    Stream(1, 2, 3).tails.toList.map(_.toList) shouldBe List(List(1, 2, 3), List(2, 3), List(3), List())
+  }
+  test("exercise 5.16") {
+
+    Stream(1, 2, 3).scanRight(0)(_ + _).toList shouldBe List(6, 5, 3, 0)
   }
 }
