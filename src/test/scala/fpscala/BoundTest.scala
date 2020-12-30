@@ -39,6 +39,7 @@ class BoundTest extends FunSuite {
   test("lower type bounds") {
     /**
      * The term B >: A expresses that the type parameter B or the abstract type B refer to a supertype of type A.
+     *
      */
 
     // The class Node and its subtypes are covariant because we have +B
@@ -65,5 +66,16 @@ class BoundTest extends FunSuite {
     val africanSwallowList = ListNode[AfricanSwallow](AfricanSwallow(), Nil())
     val birdList: Node[Bird] = africanSwallowList
     birdList.prepend(EuropeanSwallow())
+  }
+
+  test("type bounds") {
+    /**
+     * The Function1 trait is
+     *  contravariant in the function argument type S
+     *  covariant in the result type T
+     */
+    trait Function1[-S, +T] {
+     def apply(x: S): T
+    }
   }
 }
