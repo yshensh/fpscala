@@ -3,7 +3,7 @@
 Learn functional programming (FP) to write software.  Scala will be used as the vehicle to learn this new programming paradigm.
 
 The project was created by running the archetype plugin
-```$bash
+```sh
 mvn archetype:generate -DarchetypeGroupId=net.alchim31.maven -DarchetypeArtifactId=scala-archetype-simple
 ```
 
@@ -18,3 +18,6 @@ interactive exercise code: [Scala Exercises](https://www.scala-exercises.org/fp_
 coursera course: [Functional Programming Principles in Scala](https://www.coursera.org/learn/progfun1?specialization=scala)
 
 reference book: Programming in Scala: A comprehensive step-by-step guide
+
+### neophyte
+reference book/website: [The Neophyte's Guide to Scala](https://danielwestheide.com/books/the-neophytes-guide-to-scala/)
